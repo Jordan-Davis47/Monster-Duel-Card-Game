@@ -1,0 +1,115 @@
+.cardDisplay {
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+	/* width: 300px;
+	height: 300px;
+	margin: 0 auto;
+	top: 60%;
+	text-align: center;
+	border: 2px solid white; */
+}
+
+.buttonContainer button {
+	width: 40%;
+	height: 30px;
+}
+
+.atkPositionIcon,
+.defPositionIcon {
+	width: 75px;
+	height: 75px;
+	cursor: pointer;
+}
+
+.atkPositionIcon {
+	margin-top: 5px;
+	margin-right: 50px;
+}
+
+.atkPositionIcon:hover,
+.atkPositionIcon:active,
+.defPositionIcon:hover,
+.defPositionIcon:active {
+	fill: white;
+}
+
+.atkPositionIcon + p {
+	position: absolute;
+	left: 3%;
+	color: white;
+}
+
+.defPositionIcon + p {
+	position: absolute;
+	right: 3%;
+	color: white;
+}
+
+.spellIcon {
+	margin: 20px 0 0 5px;
+	width: 75px;
+	height: 75px;
+}
+
+.spellIcon:hover {
+	cursor: pointer;
+	fill: white;
+}
+
+.spellIcon + p {
+	color: white;
+}
+
+.descriptionContainer {
+	margin-top: 50px;
+	width: 100%;
+	height: 30%;
+	color: white;
+	border-top: 2px solid white;
+	padding: 10px;
+	text-align: center;
+}
+
+@media (min-width: 350px) {
+	.atkPositionIcon + p {
+		position: absolute;
+		left: 8%;
+		color: white;
+	}
+
+	.defPositionIcon + p {
+		position: absolute;
+		right: 8%;
+		color: white;
+	}
+}
+
+@media (min-width: 430px) {
+	.atkPositionIcon + p {
+		position: absolute;
+		left: 15%;
+		color: white;
+	}
+
+	.defPositionIcon + p {
+		position: absolute;
+		right: 15%;
+		color: white;
+	}
+}
+
+@media (min-width: 460px) {
+	.atkPositionIcon + p {
+		position: absolute;
+		left: 20%;
+		color: white;
+	}
+
+	.defPositionIcon + p {
+		position: absolute;
+		right: 18%;
+		color: white;
+	}
+}

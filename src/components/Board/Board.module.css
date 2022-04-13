@@ -1,0 +1,507 @@
+/* //BACKGROUND IMAGES FOR EACH SIDE OF BOARD WHEN FIELD SPELLS ARE ACTIVATED// */
+.p1DragonBg,
+.p1NatureBg,
+.p2DragonBg,
+.p2NatureBg {
+	width: 100vw;
+	max-width: 1200px;
+	height: 50vh;
+	position: absolute;
+	z-index: 0;
+}
+
+.p1DragonBg {
+	background: url("../../Images/Dragons/MountainRange.png");
+	background-size: cover;
+	bottom: 0;
+}
+
+.p1NatureBg {
+	background: url("../../Images/Nature/landscape.jpg");
+	background-size: cover;
+	bottom: 0;
+}
+
+.p2DragonBg {
+	background: url("../../Images/Dragons/MountainRange.png");
+	background-size: cover;
+	top: 0;
+	transform: rotate(180deg);
+}
+
+.p2NatureBg {
+	background: url("../../Images/Nature/landscape.jpg");
+	background-size: cover;
+	top: 0;
+	transform: rotate(180deg);
+}
+
+/* //------------------------------------------------------------------------------------------------------------------// */
+
+.board {
+	background: linear-gradient(0deg, rgba(8, 31, 238, 0.7) 0 50%, rgba(255, 0, 0, 0.7) 50% 100%);
+	width: 100vw;
+	max-width: 1200px;
+	height: 100vh;
+	border: 2px solid #000000;
+	margin: auto;
+	position: relative;
+	display: flex;
+	justify-content: center;
+	display: grid;
+	grid-template-rows: repeat(3, 25%);
+}
+
+.cardSlotContainer,
+.cardSlot2Container {
+	display: flex;
+	align-items: flex-start;
+	justify-content: space-evenly;
+	z-index: 1;
+
+	/* position: relative; */
+}
+
+.cardSlotContainer {
+	top: 20rem;
+	left: 9.5rem;
+	grid-row-start: 3;
+	grid-row-end: 4;
+	margin-top: 5px;
+}
+
+.cardSlot2Container {
+	bottom: 22rem;
+	right: 6.5rem;
+	grid-row-start: 2;
+	grid-row-end: 3;
+	margin-bottom: 5px;
+	align-items: flex-end;
+}
+
+.p1BottomContainer,
+.p2BottomContainer {
+	width: 100vw;
+	height: 8rem;
+	/* border: 3px solid black; */
+	display: flex;
+	align-self: flex-start;
+	justify-content: space-around;
+	position: relative;
+	max-width: 960px;
+}
+
+.p1BottomContainer {
+	grid-row-start: 4;
+	grid-row-end: 5;
+	flex-direction: row-reverse;
+	/* bottom: 50px; */
+}
+
+.p2BottomContainer {
+	align-items: flex-end;
+	grid-row-start: 1;
+	grid-row-end: 2;
+	top: 10vh;
+}
+
+.p1BottomContainer div {
+	margin: 0 3px;
+}
+
+.cardSlot,
+.graveyard,
+.graveyard2,
+.deck,
+.deck2,
+.spellSlot {
+	width: 3rem;
+	min-width: 58px;
+	height: 6.5rem;
+	min-height: 6.5rem;
+	border: 2px solid black;
+	border-radius: 3px;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+}
+
+.cardSlot {
+	margin: 0 4px;
+	width: 4.2rem;
+	height: 7.2rem;
+}
+
+.graveyard {
+	align-self: flex-end;
+	margin: 0 5px 5px 0;
+}
+
+.graveyard2 {
+	align-self: flex-start;
+}
+
+.graveyard,
+.graveyard2 {
+	color: white;
+}
+
+.deck {
+	align-self: flex-end;
+	margin: 0 0px 5px 5px;
+	cursor: pointer;
+}
+
+.deck:hover,
+.deck2:hover {
+	border: solid 1px white;
+}
+
+.deck2 {
+	align-self: flex-start;
+	cursor: pointer;
+}
+
+.deck,
+.deck2 {
+	background-color: black;
+	color: white;
+}
+
+.p1Life {
+	position: absolute;
+	left: 30px;
+	bottom: 250px;
+	color: white;
+}
+
+.p2Life {
+	position: absolute;
+	right: 30px;
+	top: 250px;
+	color: white;
+}
+
+.battlePhaseIcon {
+	fill: black;
+	cursor: pointer;
+}
+
+.battlePhaseIcon:hover {
+	fill: white;
+}
+
+.battlePhaseIcon:active {
+	transform: scale(0.95);
+}
+
+.battlePhaseContainer {
+	display: none;
+	text-align: center;
+	position: absolute;
+	bottom: 40%;
+	right: 2%;
+	font-size: 10px;
+	width: 40px;
+	height: 40px;
+	line-height: 0.6rem;
+	cursor: pointer;
+}
+
+.endTurnContainer {
+	display: none;
+	position: absolute;
+	width: 70px;
+	height: 50px;
+	right: 4%;
+	bottom: 30%;
+	cursor: pointer;
+}
+
+.endTurn {
+	border-radius: 50%;
+	position: absolute;
+	right: 0;
+	left: 0;
+	margin: 0 auto;
+	bottom: 30%;
+	font-size: 2em;
+	cursor: pointer;
+}
+
+.endTurn:hover {
+	color: white;
+}
+
+.endTurn:active {
+	transform: scale(0.95);
+}
+
+.endTurnContainer p {
+	font-size: 10px;
+	position: absolute;
+	bottom: -10px;
+	left: 12px;
+}
+
+.inGameMenuContainer {
+	position: absolute;
+	right: 3vw;
+	bottom: 24vh;
+}
+
+.inGameMenuIcon {
+	font-size: 2em;
+}
+
+@media (min-width: 475px) {
+	.cardSlotContainer,
+	.cardSlot2Container {
+		width: 500px;
+		justify-content: space-evenly;
+		margin: 5px auto 5px;
+	}
+
+	.p1BottomContainer,
+	.p2BottomContainer {
+		max-width: 600px;
+	}
+
+	.p2BottomContainer {
+		top: 5vh;
+	}
+
+	/* .endTurnContainer {
+		right: -10px;
+	} */
+}
+
+@media (min-width: 525px) {
+	.cardSlot,
+	.graveyard,
+	.graveyard2,
+	.deck,
+	.deck2,
+	.spellSlot {
+		width: 75px;
+		min-width: 5rem;
+		min-height: 8rem;
+	}
+
+	.p2BottomContainer .spellSlot,
+	.p1BottomContainer .spellSlot {
+		margin: 0 10px;
+	}
+
+	.cardSlotContainer,
+	.cardSlot2Container {
+		justify-content: space-evenly;
+	}
+
+	.p1BottomContainer {
+		height: 160px;
+		/* margin-bottom: px; */
+		align-items: flex-end;
+		/* margin-top: 25px; */
+	}
+
+	.p2BottomContainer {
+		height: 160px;
+		top: 8vh;
+		align-items: flex-start;
+	}
+
+	.deck,
+	.graveyard {
+		align-self: flex-start;
+	}
+
+	.deck2,
+	.graveyard2 {
+		align-self: flex-end;
+	}
+
+	.battlePhaseContainer {
+		display: block;
+		right: 2.5vw;
+		bottom: 41vh;
+		font-size: 0.8rem;
+		line-height: 1em;
+	}
+
+	.endTurnContainer {
+		display: block;
+		bottom: 27vh;
+		right: 0vw;
+	}
+
+	.inGameMenuContainer {
+		bottom: 1vh;
+		right: 8vw;
+	}
+}
+
+@media (min-width: 600px) {
+	.fieldCardSlot1 {
+		right: 40px;
+	}
+
+	.fieldCardSlot2 {
+		left: 40px;
+	}
+
+	/* .battlePhaseContainer {
+		right: 9%;
+	} */
+
+	/* .endTurnContainer {
+		bottom: 5%;
+		right: 9%;
+	} */
+
+	.endTurnContainer p {
+		font-size: 12px;
+	}
+}
+
+@media (min-width: 700px) {
+	.fieldCardSlot1,
+	.fieldCardSlot2 {
+		width: 80px;
+		height: 110px;
+		max-width: 80px;
+		max-height: 120px;
+		border: 2px solid black;
+		border-radius: 2px;
+		position: absolute;
+		margin: auto auto;
+	}
+	.fieldCardSlot1 {
+		top: 14vh;
+		bottom: 0;
+	}
+
+	.fieldCardSlot2 {
+		top: -14vh;
+		bottom: 0;
+	}
+
+	.battlePhaseContainer {
+		bottom: 30.5vh;
+		right: 13vw;
+	}
+
+	.endTurnContainer {
+		bottom: 29vh;
+		right: 0vw;
+	}
+}
+
+@media (min-width: 725px) {
+	/* .p1BottomContainer,
+	.p2BottomContainer {
+		width: 700px;
+	} */
+	.deck,
+	.graveyard2 {
+		position: relative;
+		right: 60px;
+	}
+
+	.deck2,
+	.graveyard {
+		position: relative;
+		left: 60px;
+	}
+
+	/* .battlePhaseContainer {
+		right: 8%;
+	} */
+}
+
+@media (min-width: 800px) {
+	.cardSlot,
+	.graveyard,
+	.graveyard2,
+	.deck,
+	.deck2,
+	.spellSlot,
+	.fieldCardSlot1,
+	.fieldCardSlot2 {
+		width: 90px;
+		height: 130px;
+	}
+
+	.cardSlotContainer,
+	.cardSlot2Container {
+		justify-content: space-around;
+	}
+
+	.p1BottomContainer {
+		bottom: 3vh;
+	}
+
+	.p1BottomContainer,
+	.p2BottomContainer {
+		max-width: 80%;
+		margin: auto;
+	}
+}
+
+@media (max-height: 670px) {
+	.p2BottomContainer {
+		top: 7vh;
+	}
+}
+
+@media (min-width: 1100px) {
+	.cardSlotContainer,
+	.cardSlot2Container {
+		width: 700px;
+	}
+
+	.p1BottomContainer,
+	.p2BottomContainer {
+		width: 120vw;
+		justify-content: space-around;
+		max-width: 1175px;
+	}
+
+	.deck,
+	.graveyard2 {
+		position: relative;
+		right: 0px;
+	}
+
+	.deck2,
+	.graveyard {
+		position: relative;
+		left: 0px;
+	}
+
+	.cardSlot,
+	.graveyard,
+	.graveyard2,
+	.deck,
+	.deck2,
+	.spellSlot,
+	.fieldCardSlot1,
+	.fieldCardSlot2 {
+		width: 100px;
+		height: 150px;
+	}
+
+	.p2BottomContainer {
+		/* margin-bottom: 30px; */
+		top: 3vh;
+	}
+
+	.battlePhaseContainer {
+		right: 130px;
+	}
+
+	/* .endTurnContainer {
+		bottom: 3%;
+		right: 6%;
+	} */
+}
