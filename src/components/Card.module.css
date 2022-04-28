@@ -32,6 +32,7 @@
 .name {
 	min-width: 90%;
 	height: 10%;
+	min-height: 10px;
 	border: 1px solid black;
 	margin-top: 5px;
 	box-shadow: 0 1px 2px -2px;
@@ -82,6 +83,10 @@
 	background-color: rgb(40, 110, 216);
 }
 
+.trapCard {
+	background-color: pink;
+}
+
 .spellCard img {
 	height: 100%;
 	margin-top: 3px;
@@ -109,6 +114,50 @@
 
 .defencePosition {
 	transform: rotate(90deg);
+}
+
+.faceDownCard::before {
+	content: "";
+	position: absolute;
+	width: 30px;
+	height: 70px;
+	background-color: black;
+	z-index: 1;
+	border: 1px solid black;
+	border-radius: 60%;
+}
+
+.faceDownCard::after {
+	content: "";
+	position: absolute;
+	/* top: 0; */
+	/* left: 0; */
+	/* right: 0; */
+	width: 101%;
+	height: 101%;
+	background-color: rgb(158, 41, 41);
+	background-size: cover;
+}
+
+.createDeckDisplayCard {
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+	width: 130px;
+	height: 200px;
+	background-color: rgb(210, 149, 16);
+	border: 3px solid black;
+}
+
+.createDeckDisplayCard div:nth-of-type(4) {
+	font-size: 20px;
+	font-weight: 400;
+	display: flex;
+}
+
+.createDeckDisplayCard .name {
+	align-items: center;
 }
 
 .displayedCard {
@@ -213,6 +262,13 @@
 	.clickLayer {
 		height: 128px;
 		width: 80px;
+	}
+}
+
+@media (min-width: 700px) {
+	.createDeckDisplayCard {
+		height: 310px;
+		width: 200px;
 	}
 }
 

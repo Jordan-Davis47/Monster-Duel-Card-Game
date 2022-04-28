@@ -1,0 +1,92 @@
+.leaderboard {
+	position: relative;
+	width: 85vw;
+	height: 70vh;
+	border: 2px solid white;
+	max-width: 900px;
+}
+
+.title {
+	font-family: "My Soul";
+	color: white;
+	position: relative;
+	bottom: 5%;
+	font-size: 3rem;
+	letter-spacing: 3px;
+}
+
+.leaderboardHeader {
+	display: flex;
+	justify-content: space-around;
+	border-bottom: 2px solid white;
+}
+
+.ranking {
+	position: relative;
+	display: grid;
+	grid-template-columns: 50px 1fr 1fr 1fr;
+	color: white;
+	border-bottom: 2px solid white;
+	padding: 5px 10px;
+	/* font-family: "ubuntu"; */
+}
+
+.ranking p {
+	margin: 0;
+	display: flex;
+}
+
+.ranking p:nth-of-type(3) {
+	justify-content: center;
+	margin-right: 20px;
+}
+
+.ranking p:nth-of-type(4) {
+	justify-content: center;
+	/* margin-right: 20px; */
+}
+
+.backBtn {
+	position: absolute;
+	width: 70%;
+	max-width: 160px;
+	height: 30px;
+	bottom: -6vh;
+	left: 0;
+	right: 0;
+	margin: auto;
+	border: 2px solid white;
+	border-radius: 8px;
+	background-color: black;
+	color: white;
+	font-family: "ubuntu";
+	font-size: 1.1rem;
+	cursor: pointer;
+}
+
+.backBtn:hover {
+	background-color: white;
+	color: black;
+}
+
+@keyframes spinner {
+	to {
+		transform: rotate(360deg);
+	}
+}
+
+.spinner:before {
+	content: "";
+	box-sizing: border-box;
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	width: 30px;
+	height: 30px;
+	margin-top: -15px;
+	margin-left: -15px;
+	border-radius: 50%;
+	border: 3px solid #fff;
+	border-top-color: goldenrod;
+	animation: spinner 0.6s linear infinite;
+}

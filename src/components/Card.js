@@ -1,4 +1,5 @@
 import React from "react";
+import CSSTransition from "react-transition-group/CSSTransition";
 import classes from "./Card.module.css";
 
 const Card = (props) => {
@@ -7,20 +8,30 @@ const Card = (props) => {
 	let cardClasses = `${classes.card}`;
 
 	if (props.position === "def") {
-		cardClasses = `${classes.card} ${classes.defencePosition}`;
+		cardClasses = `${classes.card} ${classes.faceDownCard} ${classes.defencePosition} `;
 	}
 	if (props.type === "spell") {
 		cardClasses = `${classes.card} ${classes.spellCard}`;
 	}
+	if (props.type === "trap") {
+		cardClasses = `${classes.card} ${classes.trapCard}`;
+	}
+	if (props.trapSet) {
+		cardClasses = `${classes.card} ${classes.trapCard} ${classes.faceDownCard}`;
+	}
+
 	if (props.clicked) {
 		if (props.position === "def") {
-			cardClasses = `${classes.card} ${classes.defencePosition} ${classes.cardClicked}`;
+			cardClasses = `${classes.card} ${classes.defencePosition} ${classes.faceDownCard} ${classes.cardClicked}`;
 		} else {
 			cardClasses = `${classes.card} ${classes.cardClicked}`;
 		}
 	}
 	if (props.className === "displayedCard") {
 		cardClasses = ` ${classes.displayedCard}`;
+	}
+	if (props.className === "createDeckDisplayCard") {
+		cardClasses = `${classes.createDeckDisplayCard}`;
 	}
 	if (props.className === "tributingCard") {
 		cardClasses = `${classes.tributingCard}`;

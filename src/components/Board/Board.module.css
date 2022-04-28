@@ -115,6 +115,7 @@
 .deck,
 .deck2,
 .spellSlot {
+	position: relative;
 	width: 3rem;
 	min-width: 58px;
 	height: 6.5rem;
@@ -287,7 +288,9 @@
 		min-width: 5rem;
 		min-height: 8rem;
 	}
+}
 
+@media (min-width: 560px) {
 	.p2BottomContainer .spellSlot,
 	.p1BottomContainer .spellSlot {
 		margin: 0 10px;
@@ -302,6 +305,7 @@
 		height: 160px;
 		/* margin-bottom: px; */
 		align-items: flex-end;
+		bottom: 4vh;
 		/* margin-top: 25px; */
 	}
 
@@ -331,7 +335,7 @@
 
 	.endTurnContainer {
 		display: block;
-		bottom: 27vh;
+		bottom: 29vh;
 		right: 0vw;
 	}
 

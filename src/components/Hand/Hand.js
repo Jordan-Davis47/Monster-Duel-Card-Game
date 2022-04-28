@@ -74,9 +74,16 @@ const Hand = (props) => {
 			return;
 		}
 		if (cardCopy.type === "trap") {
-			// console.log("first trap check");
+			cardCopy = { ...cardCopy, trapSet: true };
 			if (props.p1Turn) {
 				dispatch(playerActions.placeCard({ card: cardCopy, player: "player1" }));
+				setHasSelectedCard(false);
+				setIsTrapCard(false);
+				return;
+			} else if (props.p2Turn) {
+				dispatch(playerActions.placeCard({ card: cardCopy, player: "player2" }));
+				setHasSelectedCard(false);
+				setIsTrapCard(false);
 				return;
 			}
 		}

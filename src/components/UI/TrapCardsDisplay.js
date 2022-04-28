@@ -16,27 +16,46 @@ const TrapCardsDisplay = (props) => {
 
 	function setFocusedCardHandler(e) {
 		trapCardClickIds = "";
+		let card;
 		const cardName = e.target.nextElementSibling.textContent;
+		console.log(cardName);
 		trapCardClickIds += cardName;
-		const card = props.p1TrapCards.find((card) => card.name === cardName);
+		if (props.AiPlaying && props.p1Turn) {
+			console.log("ai p1 turn check");
+			card = props.p1TrapCards.find((card) => card.name === cardName);
+		} else if (!props.p1Turn) {
+			console.log("p1turn check");
+			card = props.p1TrapCards.find((card) => card.name === cardName);
+		} else if (!props.p2Turn) {
+			console.log("p2turn check");
+			card = props.p2TrapCards.find((card) => card.name === cardName);
+		}
+
+		console.log(card);
 		setFocusedCard(card);
 	}
 
 	function activateTrapCardHandler() {
 		dispatch(playerActions.effectCreator({ card: focusedCard }));
 		props.onClose();
+		console.log("act trap handler battle calc fired");
 		dispatch(playerActions.battleCalculation());
+		dispatch(playerActions.clearAttackerDefender());
+		props.onSetUsingTrap();
 	}
 
 	return (
 		<Modal className={props.className}>
 			<h3>Choose a trap to activate</h3>
 			<div className={classes.trapCardsContainer}>
-				{!props.p1Turn &&
+				{props.p1Turn &&
 					props.p1TrapCards.map((card) => (
 						<Card inspect={props.inspect} className="displayedTrapCard" key={card.id} name={card.name} src={card.img} effect={card.effect} type={card.type} onClick={setFocusedCardHandler} clicked={trapCardClickIds.includes(`${card.name}`)} />
 					))}
-				{!props.p2Turn && props.p2TrapCards.map((card) => <Card key={card.id} name={card.name} src={card.img} effect={card.effect} type={card.type} onClick={setFocusedCardHandler} />)}
+				{props.p2Turn &&
+					props.p2TrapCards.map((card) => (
+						<Card inspect={props.inspect} className="displayedTrapCard" key={card.id} name={card.name} src={card.img} effect={card.effect} type={card.type} onClick={setFocusedCardHandler} clicked={trapCardClickIds.includes(`${card.name}`)} />
+					))}
 			</div>
 			{focusedCard.id && <div className={classes.focusedCardContainer}>{focusedCard.id && <p>{focusedCard.cardDescription}</p>} </div>}
 			{focusedCard.id && (

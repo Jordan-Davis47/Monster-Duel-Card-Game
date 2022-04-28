@@ -20,6 +20,7 @@
 	box-shadow: 0 2px 8px rgba(0, 0, 0, 0.25);
 	z-index: 30;
 	animation: slide-down 300ms ease-out forwards;
+	background: linear-gradient(0deg, rgba(0, 0, 0, 0.9) 17%, rgba(0, 0, 0, 0.2) 30%, rgba(0, 0, 0, 0.7) 95%);
 }
 
 .modal {

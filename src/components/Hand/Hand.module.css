@@ -12,17 +12,18 @@
 	/* overflow-x: hidden; */
 	overflow-y: hidden;
 	align-items: center;
+	z-index: 20;
 }
 
 .hand1 {
-	bottom: -7vh;
+	bottom: 0;
 	left: 0;
 	right: 0;
 	margin: auto;
 }
 
 .hand2 {
-	top: 6vh;
+	top: 0vh;
 	left: 0;
 	right: 0;
 	margin: auto;

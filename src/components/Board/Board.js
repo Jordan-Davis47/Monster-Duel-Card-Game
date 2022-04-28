@@ -77,8 +77,9 @@ const Board = (props) => {
 	}
 
 	function tributeSelectHandler(e) {
-		console.log(e.target);
+		console.log(e.target, selectedCard);
 		if (canTributeSummon) {
+			console.log(tributingPlayer);
 			dispatch(playerActions.removeTributedCards());
 			dispatch(playerActions.placeCard({ player: tributingPlayer, card: selectedCard }));
 			dispatch(playerActions.setTributePrompt(false));
@@ -86,11 +87,17 @@ const Board = (props) => {
 			return;
 		}
 		let slotId = e.target.parentNode.parentNode.id;
-		if (slotId === ("cs1" || "cs2" || "cs3")) {
+		if ((slotId === "cs1" || slotId === "cs2" || slotId === "cs3") && selectedCard.owner === "p1") {
 			tributingPlayer = "player1";
-		} else if (slotId === ("cs4" || "cs5" || "cs6")) {
-			tributingPlayer = "player2";
+		} else if ((slotId === "cs4" || slotId === "cs5" || slotId === "cs6") && selectedCard.owner === "p1") {
+			return;
 		}
+		if ((slotId === "cs4" || slotId === "cs5" || slotId === "cs6") && selectedCard.owner === "p2") {
+			tributingPlayer = "player2";
+		} else if ((slotId === "cs1" || slotId === "cs2" || slotId === "cs3") && selectedCard.owner === "p2") {
+			return;
+		}
+
 		// console.log(slotId);
 		props.onAddClickedId(slotId);
 
@@ -113,9 +120,9 @@ const Board = (props) => {
 	}
 
 	function showTrapCards() {
+		props.onCloseTrapPrompt();
 		setShowTraps(true);
 		inspect = true;
-		props.onCloseTrapPrompt();
 	}
 
 	function closeTrapCardDisplayHandler() {
@@ -135,7 +142,7 @@ const Board = (props) => {
 		}
 	}, [player1FieldSlot1, player1FieldSlot2, player1FieldSlot3, player2FieldSlot1, player2FieldSlot2, player2FieldSlot3, player1FieldSpell, player2FieldSpell, dispatch]);
 
-	// console.log("can tribute:", canTributeSummon, "tributePrompt:", tributePrompt, "is tributing:", isTributing);
+	console.log("can tribute:", canTributeSummon, "tributePrompt:", tributePrompt, "is tributing:", isTributing);
 	console.log("tributes:", tributes);
 
 	const selectHandlers = isTributing ? tributeSelectHandler : isCastingSpell ? spellTargetSelectHandler : battleSelectHandler;
@@ -213,18 +220,18 @@ const Board = (props) => {
 			</div>
 			<div className={classes.p1BottomContainer}>
 				<CardSlot className={classes.graveyard}>{p1Graveyard.length}</CardSlot>
-				<CardSlot className={classes.spellSlot}>{props.p1SpellSlotsPlaying[0] && <Card name={player1SpellSlot1.name} src={player1SpellSlot1.img} type={player1SpellSlot1.type} />}</CardSlot>
-				<CardSlot className={classes.spellSlot}>{props.p1SpellSlotsPlaying[1] && <Card name={player1SpellSlot2.name} src={player1SpellSlot2.img} type={player1SpellSlot2.type} />}</CardSlot>
-				<CardSlot className={classes.spellSlot}>{props.p1SpellSlotsPlaying[2] && <Card name={player1SpellSlot3.name} src={player1SpellSlot3.img} type={player1SpellSlot3.type} />}</CardSlot>
+				<CardSlot className={classes.spellSlot}>{props.p1SpellSlotsPlaying[0] && <Card name={player1SpellSlot1.name} src={player1SpellSlot1.img} type={player1SpellSlot1.type} trapSet={player1SpellSlot1.trapSet} />}</CardSlot>
+				<CardSlot className={classes.spellSlot}>{props.p1SpellSlotsPlaying[1] && <Card name={player1SpellSlot2.name} src={player1SpellSlot2.img} type={player1SpellSlot2.type} trapSet={player1SpellSlot2.trapSet} />}</CardSlot>
+				<CardSlot className={classes.spellSlot}>{props.p1SpellSlotsPlaying[2] && <Card name={player1SpellSlot3.name} src={player1SpellSlot3.img} type={player1SpellSlot3.type} trapSet={player1SpellSlot3.trapSet} />}</CardSlot>
 				<CardSlot onClick={props.onDrawCard} className={classes.deck}>
 					{props.p1Deck.length}
 				</CardSlot>
 			</div>
 			<div className={classes.p2BottomContainer}>
 				<CardSlot className={classes.graveyard2}>{p2Graveyard.length}</CardSlot>
-				<CardSlot className={classes.spellSlot}>{props.p2SpellSlot1}</CardSlot>
-				<CardSlot className={classes.spellSlot}></CardSlot>
-				<CardSlot className={classes.spellSlot}></CardSlot>
+				<CardSlot className={classes.spellSlot}>{props.p2SpellSlotsPlaying[0] && <Card name={player2SpellSlot1.name} src={player2SpellSlot1.img} type={player2SpellSlot1.type} trapSet={player2SpellSlot1.trapSet} />}</CardSlot>
+				<CardSlot className={classes.spellSlot}>{props.p2SpellSlotsPlaying[1] && <Card name={player2SpellSlot2.name} src={player2SpellSlot2.img} type={player2SpellSlot2.type} trapSet={player2SpellSlot2.trapSet} />}</CardSlot>
+				<CardSlot className={classes.spellSlot}>{props.p2SpellSlotsPlaying[2] && <Card name={player2SpellSlot3.name} src={player2SpellSlot3.img} type={player2SpellSlot3.type} trapSet={player2SpellSlot3.trapSet} />}</CardSlot>
 				<CardSlot onClick={props.onDrawCard} className={classes.deck2}>
 					{props.p2Deck.length}
 				</CardSlot>
@@ -271,7 +278,20 @@ const Board = (props) => {
 					</div>
 				</Modal>
 			)}
-			{showTraps && <TrapCardsDisplay p1TrapCards={p1TrapCards} p2TrapCards={p2TrapCards} p1Turn={props.player1Turn} p2Turn={props.player2Turn} inspect={inspect} onAddClickedIds={props.onAddClickedId} onClose={closeTrapCardDisplayHandler} />}
+			{showTraps && (
+				<TrapCardsDisplay
+					trapPrompt={props.trapPrompt}
+					p1TrapCards={p1TrapCards}
+					p2TrapCards={p2TrapCards}
+					p1Turn={props.p1Turn}
+					p2Turn={props.p2Turn}
+					inspect={inspect}
+					onAddClickedIds={props.onAddClickedId}
+					onClose={closeTrapCardDisplayHandler}
+					onSetUsingTrap={props.onSetUsingTrap}
+					AiPlaying={props.AiPlaying}
+				/>
+			)}
 		</div>
 	);
 };

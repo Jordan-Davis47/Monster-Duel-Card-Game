@@ -13,7 +13,8 @@ import PhaseHeader from "./components/UI/PhaseHeader";
 import Winner from "./components/UI/Winner";
 import Turn from "./components/UI/Turn";
 import InGameMenu from "./components/UI/InGameMenu";
-import { champChooseCard, champBattleTactic, champCheckForSpellCard } from "./AiTactics/champ";
+import { champChooseCard, champBattleTactic, champCheckForSpellCard, champCheckForTrapCard, champSelectTrap } from "./AiTactics/champ";
+import MainMenu from "./components/UI/Menus/MainMenu";
 
 let clickedIds = "";
 
@@ -56,6 +57,9 @@ function App() {
 	const player1SpellSlot1Playing = useSelector((state) => state.player.player1SpellSlot1Playing);
 	const player1SpellSlot2Playing = useSelector((state) => state.player.player1SpellSlot2Playing);
 	const player1SpellSlot3Playing = useSelector((state) => state.player.player1SpellSlot3Playing);
+	const player2SpellSlot1 = useSelector((state) => state.player.player2SpellSlot1);
+	const player2SpellSlot2 = useSelector((state) => state.player.player2SpellSlot2);
+	const player2SpellSlot3 = useSelector((state) => state.player.player2SpellSlot3);
 	const player2SpellSlot1Playing = useSelector((state) => state.player.player2SpellSlot1Playing);
 	const player2SpellSlot2Playing = useSelector((state) => state.player.player2SpellSlot2Playing);
 	const player2SpellSlot3Playing = useSelector((state) => state.player.player2SpellSlot3Playing);
@@ -72,20 +76,35 @@ function App() {
 	const winner = useSelector((state) => state.player.winner);
 	//card select highlight handler//
 	const [isClickedIds, setIsClickedIds] = useState("");
-	const [menuOpen, setMenuOpen] = useState(false);
+	//MAIN MENU SHOW STATE//
+	const [showMainMenu, setShowMainMenu] = useState(true);
+	//IN GAME MENU STATES//
+	const [inGameMenuOpen, setInGameMenuOpen] = useState(false);
 	const [trapMenuIsOpen, setTrapMenuIsOpen] = useState(false);
-	const [AiPlaying, setAiPlaying] = useState(true);
-	const [battleReady, setBattleReady] = useState(false);
+	const [isUsingTrap, setIsUsingTrap] = useState(false);
+	const [drawCardsIsShown, setDrawCardsIsShown] = useState(false);
+	//STATE FOR CONTROLLING IF AI IS PLAYING//
+	const AiPlaying = useSelector((state) => state.player.AiPlaying);
+	const [showBoard, setShowBoard] = useState(false);
 
 	let winningPlayer;
 
 	function pickDeckHandler() {
-		dispatch(playerActions.setPlayerDeck({ player: "player1", deck: dragonDeck }));
-		dispatch(playerActions.setPlayerDeck({ player: "player2", deck: natureDeck }));
+		setShowBoard(true);
+		setDrawCardsIsShown(true);
+		setShowMainMenu(false);
 	}
+	console.log(player1Deck, player2Deck, player1Deck.length);
 
 	//draw 4 card hand from deck//
 	function PlayerDrawHandHandler() {
+		dispatch(playerActions.playersDrawHand());
+		dispatch(playerActions.setPlayerTurn("player1"));
+		setDrawCardsIsShown(false);
+	}
+
+	function startMatchHandler() {
+		setShowBoard(true);
 		dispatch(playerActions.playersDrawHand());
 		dispatch(playerActions.setPlayerTurn("player1"));
 	}
@@ -110,8 +129,8 @@ function App() {
 	function endTurnHandler() {
 		dispatch(playerActions.endTurn());
 		setIsClickedIds("");
-		if (menuOpen) {
-			setMenuOpen(false);
+		if (inGameMenuOpen) {
+			setInGameMenuOpen(false);
 		}
 		if (AiPlaying) {
 			dispatch(playerActions.drawCard());
@@ -122,7 +141,7 @@ function App() {
 			if (card) {
 				if (card.tributesRequired) {
 					console.log("TRIBUTES REQUIRED CHECK");
-					dispatch(playerActions.setIsTributing(true));
+					// dispatch(playerActions.setIsTributing(true));
 					if (card.tributesRequired === 2) {
 						console.log("2 tribute CHECK");
 						if (player2FieldSlot1Playing && player2FieldSlot1.tributesRequired !== 2) {
@@ -164,50 +183,71 @@ function App() {
 				dispatch(playerActions.placeCard({ card: card, player: "player2" }));
 				dispatch(playerActions.clearSelectedTributes());
 			}
+			battlePhaseHandler();
 
 			const spellCard = champCheckForSpellCard(player2Hand);
 			console.log("spell card:", spellCard);
 			if (spellCard) {
-				console.log("effect creator reached");
 				dispatch(playerActions.effectCreator({ card: spellCard }));
 				dispatch(playerActions.setSpellCastCard({ card: spellCard }));
+				if (spellCard.name === "Colossal Black Hole") {
+					console.log("black hole check");
+					dispatch(playerActions.endTurn());
+					dispatch(playerActions.clearAttackerDefender());
+					return;
+				}
+			}
+			const trapCard = champCheckForTrapCard(player2Hand);
+			if (trapCard) {
+				const trapToUse = { ...trapCard, setTrap: true };
+				dispatch(playerActions.placeCard({ card: trapToUse, player: "player2" }));
 			}
 
-			battlePhaseHandler();
 			const targets = champBattleTactic(player2FieldSlots, player1FieldSlots);
-			console.log("targets:", targets);
+			console.log("targets:", targets, targets.length);
 			if (targets) {
 				if (targets[0].length) {
 					dispatch(playerActions.setAttackerDefender({ attacker: player2FieldSlot1, atkId: "cs4", defender: targets[0][0], defId: targets[0][1] }));
 					// dispatch(playerActions.battleCalculation());
 					// dispatch(playerActions.battleSelect({ slotId: "cs4" }));
 					// dispatch(playerActions.battleSelect({ slotId: targets[0][1] }));
-					// setBattleReady(true);
-
 					console.log("target found1");
 				}
 				if (targets[1].length) {
 					dispatch(playerActions.setAttackerDefender({ attacker: player2FieldSlot2, atkId: "cs5", defender: targets[1][0], defId: targets[1][1] }));
-					// dispatch(playerActions.battleCalculation());
-					// dispatch(playerActions.battleSelect({ slotId: "cs5" }));
-					// dispatch(playerActions.battleSelect({ slotId: targets[1][1] }));
-					// setBattleReady(true);
-
 					console.log("target found2");
 				}
 				if (targets[2].length) {
-					dispatch(playerActions.setAttackerDefender({ attacker: player2FieldSlot1, atkId: "cs6", defender: targets[2][0], defId: targets[2][1] }));
-					// dispatch(playerActions.battleCalculation());
-					// dispatch(playerActions.battleSelect({ slotId: "cs6" }));
-					// dispatch(playerActions.battleSelect({ slotId: targets[2][1] }));
-					// setBattleReady(true);
+					dispatch(playerActions.setAttackerDefender({ attacker: player2FieldSlot3, atkId: "cs6", defender: targets[2][0], defId: targets[2][1] }));
 					console.log("target found3");
 				}
-				setTimeout(() => {
-					dispatch(playerActions.endTurn());
-				}, 500);
-				return;
+				if (!player1FieldSlot1Playing && !player1FieldSlot2Playing && !player1FieldSlot3Playing) {
+					console.log("direct attack AI check");
+					if (player2FieldSlot1Playing && !player2FieldSlot1.hasAttacked) {
+						console.log("check for has attaceked");
+						dispatch(playerActions.battleSelect({ slotId: "cs4" }));
+						dispatch(playerActions.battleSelect({ slotId: "Direct Attack" }));
+					}
+					if (player2FieldSlot2Playing && !player2FieldSlot2.hasAttacked) {
+						console.log("check for has attaceked");
+						dispatch(playerActions.battleSelect({ slotId: "cs5" }));
+						dispatch(playerActions.battleSelect({ slotId: "Direct Attack" }));
+					}
+					if (player2FieldSlot3Playing && !player2FieldSlot3.hasAttacked) {
+						console.log("check for has attaceked");
+						dispatch(playerActions.battleSelect({ slotId: "cs6" }));
+						dispatch(playerActions.battleSelect({ slotId: "Direct Attack" }));
+					}
+					// dispatch(playerActions.setAttackerDefender({ attacker: player2FieldSlot1, atkId: "cs4", defender: "Direct Attack", defId: "none" }));
+					// dispatch(playerActions.battleSelect({ slotId: "cs4" }));
+					// dispatch(playerActions.battleSelect({ slotId: "Direct Attack" }));
+				}
 			}
+
+			setTimeout(() => {
+				dispatch(playerActions.endTurn());
+			}, 500);
+			return;
 		}
 
 		// dispatch(playerActions.endTurn());
@@ -220,34 +260,64 @@ function App() {
 	function battlePhaseHandler() {
 		dispatch(playerActions.setBattlephase(true));
 		dispatch(playerActions.setSummonPhase(false));
-		if (menuOpen) {
-			setMenuOpen(false);
+		if (inGameMenuOpen) {
+			setInGameMenuOpen(false);
 		}
 	}
-
+	//USE EFFECT FOR BATTLE CALC / TRAP CARD MENU TRIGGER//
 	useEffect(() => {
 		console.log("useEffect fired");
 		console.log(attacker.length, defender.length);
 
 		if (attacker.length && defender.length) {
-			if (player1Turn && (player2SpellSlot1Playing || player2SpellSlot2Playing || player2SpellSlot3Playing)) {
+			if (player1Turn && !isUsingTrap && (player2SpellSlot1Playing || player2SpellSlot2Playing || player2SpellSlot3Playing)) {
 				console.log("trap menu is open set 1");
+				if (AiPlaying) {
+					const trapCard = champSelectTrap(player2SpellSlot1, player2SpellSlot2, player2SpellSlot3);
+					dispatch(playerActions.effectCreator({ card: trapCard }));
+					dispatch(playerActions.battleCalculation());
+					dispatch(playerActions.clearAttackerDefender());
+					return;
+				}
 				setTrapMenuIsOpen(true);
+				setIsUsingTrap(true);
 				return;
-			} else if (player2Turn && (player1SpellSlot1Playing || player1SpellSlot2Playing || player1SpellSlot3Playing)) {
+			} else if (player2Turn && !isUsingTrap && (player1SpellSlot1Playing || player1SpellSlot2Playing || player1SpellSlot3Playing)) {
 				console.log("trap menu is open set 2");
 				setTrapMenuIsOpen(true);
+				setIsUsingTrap(true);
 				return;
 			}
-			// setTrapMenuIsOpen(dispatch(playerActions.checkForTraps()));
 			console.log("useEffect fired2");
-
-			dispatch(playerActions.battleCalculation());
+			if (!isUsingTrap) {
+				console.log("use Effect battle calc fired");
+				dispatch(playerActions.battleCalculation());
+			}
+			if (!isUsingTrap) {
+				console.log("clear atk def");
+				dispatch(playerActions.clearAttackerDefender());
+			}
 			setIsClickedIds("");
-			// dispatch(playerActions.endTurn());
-			setBattleReady(false);
 		}
-	}, [attacker, defender, dispatch, player1Turn, player2Turn, player1SpellSlot1Playing, player1SpellSlot2Playing, player1SpellSlot3Playing, player2SpellSlot1Playing, player2SpellSlot2Playing, player2SpellSlot3Playing, battleReady]);
+	}, [
+		attacker,
+		defender,
+		dispatch,
+		player1Turn,
+		player2Turn,
+		player1SpellSlot1Playing,
+		player1SpellSlot2Playing,
+		player1SpellSlot3Playing,
+		player2SpellSlot1,
+		player2SpellSlot2,
+		player2SpellSlot3,
+		player2SpellSlot1Playing,
+		player2SpellSlot2Playing,
+		player2SpellSlot3Playing,
+		trapMenuIsOpen,
+		isUsingTrap,
+		AiPlaying,
+	]);
 
 	if (player1Life <= 0) {
 		selectWinnerHandler("p2");
@@ -262,11 +332,11 @@ function App() {
 	}
 
 	function openInGameMenu() {
-		setMenuOpen(true);
+		setInGameMenuOpen(true);
 	}
 
 	function closeInGameMenu() {
-		setMenuOpen(false);
+		setInGameMenuOpen(false);
 		// console.log("closed");
 	}
 
@@ -302,6 +372,11 @@ function App() {
 
 	function trapPromptCloseHandler() {
 		setTrapMenuIsOpen(false);
+		console.log("trap menu set to false");
+	}
+
+	function setIsUsingTrapHandler() {
+		setIsUsingTrap(false);
 	}
 
 	// console.log(winningPlayer);
@@ -311,41 +386,50 @@ function App() {
 	const player1SpellSlotsPlaying = [player1SpellSlot1Playing, player1SpellSlot2Playing, player1SpellSlot3Playing];
 	const player2SpellSlotsPlaying = [player2SpellSlot1Playing, player2SpellSlot2Playing, player2SpellSlot3Playing];
 
+	console.log(trapMenuIsOpen);
+
 	return (
 		<Fragment>
+			{showMainMenu && <MainMenu onPickDeck={pickDeckHandler} />}
 			{winner && <Winner winner={winningPlayer} />}
-			<Turn turn={turn} className={turnClasses.turnCount} />
-			<PhaseHeader drawPhase={drawPhase} summonPhase={summonPhase} battlePhase={battlePhase} />
-			<Board
-				onDrawCard={drawCardHandler}
-				summonPhase={summonPhase}
-				battlePhase={battlePhase}
-				onBattlePhase={battlePhaseHandler}
-				p1Deck={player1Deck}
-				p2Deck={player2Deck}
-				onEndTurn={endTurnHandler}
-				onWinner={selectWinnerHandler}
-				isClickedIds={isClickedIds}
-				onAddClickedId={addClickedId}
-				onClearClickedIds={clearClickedIds}
-				onOpenInGameMenu={openInGameMenu}
-				onCloseTrapPrompt={trapPromptCloseHandler}
-				trapPrompt={trapMenuIsOpen}
-				p1SpellSlotsPlaying={player1SpellSlotsPlaying}
-				p2SpellSlotsPlaying={player2SpellSlotsPlaying}
-				p1Turn={player1Turn}
-				p2Turn={player2Turn}
-			/>
-			<Button className={btnClasses.button} onClick={pickDeckHandler}>
+			{showBoard && <Turn turn={turn} className={turnClasses.turnCount} />}
+			{showBoard && <PhaseHeader drawPhase={drawPhase} summonPhase={summonPhase} battlePhase={battlePhase} />}
+			{showBoard && (
+				<Board
+					onDrawCard={drawCardHandler}
+					summonPhase={summonPhase}
+					battlePhase={battlePhase}
+					onBattlePhase={battlePhaseHandler}
+					p1Deck={player1Deck}
+					p2Deck={player2Deck}
+					onEndTurn={endTurnHandler}
+					onWinner={selectWinnerHandler}
+					isClickedIds={isClickedIds}
+					onAddClickedId={addClickedId}
+					onClearClickedIds={clearClickedIds}
+					onOpenInGameMenu={openInGameMenu}
+					onCloseTrapPrompt={trapPromptCloseHandler}
+					trapPrompt={trapMenuIsOpen}
+					p1SpellSlotsPlaying={player1SpellSlotsPlaying}
+					p2SpellSlotsPlaying={player2SpellSlotsPlaying}
+					p1Turn={player1Turn}
+					p2Turn={player2Turn}
+					onSetUsingTrap={setIsUsingTrapHandler}
+					AiPlaying={AiPlaying}
+				/>
+			)}
+			{/* <Button className={btnClasses.button} onClick={pickDeckHandler}>
 				Pick Deck
-			</Button>
-			<Button className={btnClasses.button} onClick={PlayerDrawHandHandler}>
-				Draw Hand
-			</Button>
+			</Button> */}
+			{drawCardsIsShown && (
+				<Button className={btnClasses.drawButton} onClick={PlayerDrawHandHandler}>
+					Draw Cards
+				</Button>
+			)}
 
 			<Hand id={"p1"} turn={player1Turn} className={classes.hand1} p1Turn={player1Turn} p2Turn={player2Turn} summonPhase={summonPhase} hand={player1Hand} />
 			<Hand id={"p2"} turn={player2Turn} className={classes.hand2} p1Turn={player1Turn} p2Turn={player2Turn} summonPhase={summonPhase} hand={player2Hand} />
-			{menuOpen && <InGameMenu onBattlePhase={battlePhaseHandler} onEndTurn={endTurnHandler} onCloseMenu={closeInGameMenu} battlePhase={battlePhase} drawPhase={drawPhase} summonPhase={summonPhase} turn={turn} />}
+			{inGameMenuOpen && <InGameMenu onBattlePhase={battlePhaseHandler} onEndTurn={endTurnHandler} onCloseMenu={closeInGameMenu} battlePhase={battlePhase} drawPhase={drawPhase} summonPhase={summonPhase} turn={turn} />}
 		</Fragment>
 	);
 }

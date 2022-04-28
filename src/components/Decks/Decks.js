@@ -96,6 +96,18 @@ export const dragonDeck = [
 		cardDescription: "With the defensive capabilities of a castle and the raw power of a dragon, this monster wont be counquered easily",
 	},
 	{
+		name: "Hatching Dragon Egg",
+		img: CrackedDragonEgg,
+		id: 47,
+		type: "spell",
+		cardDescription: "Hatch a random dragon card from your deck and bring it into your hand",
+		effect: {
+			type: "Summon",
+			amount: 1,
+			condition: "Deck to hand",
+		},
+	},
+	{
 		name: "Dragon Tamer",
 		atk: 1400,
 		def: 1600,
@@ -107,7 +119,7 @@ export const dragonDeck = [
 		cardDescription: "A member of the Black Dragon clan thought to be long extinct, these humans are some of the few remaining people that are able to control these feral beasts",
 	},
 	{
-		name: "Dragon Trap",
+		name: "Wyvern Ambush",
 		img: DragonSymbol,
 		id: 43,
 		type: "trap",
@@ -119,6 +131,31 @@ export const dragonDeck = [
 		},
 	},
 	{
+		name: "Colossal Black Hole",
+		img: GaiaTree,
+		id: 49,
+		type: "spell",
+		cardDescription: "sacrifice 2 random cards from your hand, destroy all monsters on the field",
+		effect: {
+			type: "Destroy",
+			amount: "all",
+			condition: "Sacrifice",
+			conditionAmount: 2,
+		},
+	},
+	{
+		name: "Comfort In The Flames",
+		img: DragonSymbol,
+		id: 45,
+		type: "trap",
+		cardDescription: "Reduce the damage inflicted or finish the turn strong with increased life points: Heal your life points by 500",
+		effect: {
+			type: "Heal",
+			amount: 500,
+		},
+	},
+
+	{
 		name: "Lucky Dragon Egg",
 		img: ColoredEgg,
 		id: 46,
@@ -129,40 +166,20 @@ export const dragonDeck = [
 			amount: 2,
 		},
 	},
-	{
-		name: "Dragon Egg",
-		img: CrackedDragonEgg,
-		id: 47,
-		type: "spell",
-		cardDescription: "",
-		effect: {
-			type: "Summon",
-			amount: 2,
-		},
-	},
 
 	{
-		name: "Destroy trap",
+		name: "Flame Serpents Revenge",
 		img: BlackDragonFlame,
-		id: 44,
+		id: 51,
 		type: "trap",
-		cardDescription: "Trap Card",
+		cardDescription: "Destroy 1 random monster card from your opponents field ",
 		effect: {
 			type: "Destroy",
+			condtion: "random",
 			amount: 1,
 		},
 	},
-	{
-		name: "Heal Trap",
-		img: DragonSymbol,
-		id: 45,
-		type: "trap",
-		cardDescription: "Trap Card",
-		effect: {
-			type: "Heal",
-			amount: 500,
-		},
-	},
+
 	{
 		name: "Dragons Breath",
 		img: DragonBreathe,
@@ -413,25 +430,27 @@ export const natureDeck = [
 		},
 	},
 	{
-		name: "Nature Trap",
+		name: "Branches Of Peace",
 		img: GaiaTree,
 		id: 48,
 		type: "trap",
-		cardDescription: "Increase LP by attackers attack points",
+		cardDescription: "Increase your lde points by the attackers attack points",
 		effect: {
 			type: "Heal",
 			amount: "atk",
 		},
 	},
 	{
-		name: "Collosal Black Hole",
+		name: "Colossal Black Hole",
 		img: GaiaTree,
 		id: 49,
 		type: "spell",
-		cardDescription: "sacrifice 2 random cards from your hand, destroy all cards on the field		q	1",
+		cardDescription: "sacrifice 2 random cards from your hand, destroy all monsters on the field",
 		effect: {
 			type: "Destroy",
-			amount: 2,
+			amount: "all",
+			condition: "Sacrifice",
+			conditionAmount: 2,
 		},
 	},
 	{
